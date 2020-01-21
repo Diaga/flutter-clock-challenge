@@ -16,13 +16,15 @@ class InfoPanel extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        Text('$temperature ,  ${weather[0].toUpperCase()}${weather.substring(1)}',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,shadows: [
-
-
-            ])),
+        Text(
+            '$temperature ,  ${weather[0].toUpperCase()}${weather.substring(1)}',
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, shadows: [])),
         Padding(padding: EdgeInsets.all(2)),
-        Text(location, style: TextStyle(fontWeight: FontWeight.bold),)
+        Text(
+          location,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )
       ],
     );
   }

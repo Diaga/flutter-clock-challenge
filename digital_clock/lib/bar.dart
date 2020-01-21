@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:digital_clock/block.dart';
 
-
 /// [Bar] widget uses two [Block] widgets and serves as one of the seven
 /// identical widgets of a digit.
 class Bar extends StatelessWidget {
@@ -31,21 +30,21 @@ class Bar extends StatelessWidget {
       height: this.isRow ? 2.0 : maxSize * 2,
       child: this.isRow
           ? Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Block(width: width, height: height, isOn: this.isOn),
-          Block(width: width, height: height, isOn: this.isOn),
-        ],
-      )
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Block(width: width, height: height, isOn: this.isOn),
+                Block(width: width, height: height, isOn: this.isOn),
+              ],
+            )
           : Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Block(width: width, height: height, isOn: this.isOn),
-          Block(width: width, height: height, isOn: this.isOn),
-        ],
-      ),
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Block(width: width, height: height, isOn: this.isOn),
+                Block(width: width, height: height, isOn: this.isOn),
+              ],
+            ),
     );
   }
 }
