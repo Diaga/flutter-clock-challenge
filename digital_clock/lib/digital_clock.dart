@@ -11,24 +11,8 @@ import 'package:intl/intl.dart';
 
 // Components imports
 import 'package:digital_clock/digit.dart';
-
-enum _Element {
-  background,
-  text,
-  shadow,
-}
-
-final _lightTheme = {
-  _Element.background: Color(0xFF81B3FE),
-  _Element.text: Colors.white,
-  _Element.shadow: Colors.black,
-};
-
-final _darkTheme = {
-  _Element.background: Colors.black,
-  _Element.text: Colors.white,
-  _Element.shadow: Color(0xFF174EA6),
-};
+import 'package:digital_clock/colon.dart';
+import 'package:digital_clock/info_panel.dart';
 
 /// A basic digital clock.
 ///
@@ -56,24 +40,12 @@ class _DigitalClockState extends State<DigitalClock> {
   @override
   void initState() {
     super.initState();
-    widget.model.addListener(_updateModel);
     _updateTime();
-    _updateModel();
-  }
-
-  @override
-  void didUpdateWidget(DigitalClock oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.model != oldWidget.model) {
-      oldWidget.model.removeListener(_updateModel);
-      widget.model.addListener(_updateModel);
-    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    widget.model.removeListener(_updateModel);
     widget.model.dispose();
 
     _hourLController.close();
@@ -85,24 +57,9 @@ class _DigitalClockState extends State<DigitalClock> {
     super.dispose();
   }
 
-  void _updateModel() {
-    setState(() {
-      // Cause the clock to rebuild when the model changes.
-    });
-  }
-
   void _updateTime() {
     _dateTime = DateTime.now();
-    // Update once per minute. If you want to update every second, use the
-    // following code.
-//      _timer = Timer(
-//        Duration(minutes: 1) -
-//            Duration(seconds: _dateTime.second) -
-//            Duration(milliseconds: _dateTime.millisecond),
-//        _updateTime,
-//      );
-    // Update once per second, but make sure to do it at the beginning of each
-    // new second, so that the clock is accurate.
+
     _timer = Timer(
       Duration(seconds: 1) - Duration(milliseconds: _dateTime.millisecond),
       _updateTime,
@@ -122,62 +79,40 @@ class _DigitalClockState extends State<DigitalClock> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).brightness == Brightness.light
-        ? _lightTheme
-        : _darkTheme;
+    final isLightTheme = Theme.of(context).brightness == Brightness.light;
 
-//    final fontSize = MediaQuery.of(context).size.width / 3.5;
-//    final offset = -fontSize / 7;
-//    final defaultStyle = TextStyle(
-//      color: colors[_Element.text],
-//      fontFamily: 'PressStart2P',
-//      fontSize: fontSize,
-//      shadows: [
-//        Shadow(
-//          blurRadius: 0,
-//          color: colors[_Element.shadow],
-//          offset: Offset(10, 0),
-//        ),
-//      ],
-//    );
-
-//    return Container(
-//      color: colors[_Element.background],
-//      child: Center(
-//        child: DefaultTextStyle(
-//          style: defaultStyle,
-//          child: Stack(
-//            children: <Widget>[
-//              Positioned(left: offset, top: 0, child: Text(hour)),
-//              Positioned(right: offset, bottom: offset, child: Text(minute)),
-//            ],
-//          ),
-//        ),
-//      ),
-//    );
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight
-    ]);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     return Container(
-        color: Colors.white,
-        child: Center(
-            child: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-          Digit(stream: _hourLController.stream),
-          Padding(padding: EdgeInsets.all(7.5)),
-          Digit(stream: _hourRController.stream),
-          Padding(padding: EdgeInsets.all(5.0)),
-          Colon(),
-          Padding(padding: EdgeInsets.all(5.0)),
-          Digit(stream: _minLController.stream),
-          Padding(padding: EdgeInsets.all(7.5)),
-          Digit(stream: _minRController.stream),
-          Padding(padding: EdgeInsets.all(5.0)),
-          Colon(),
-          Padding(padding: EdgeInsets.all(5.0)),
-          Digit(stream: _secLController.stream),
-          Padding(padding: EdgeInsets.all(7.5)),
-          Digit(stream: _secRController.stream)
-        ])));
+        color: isLightTheme ? Colors.white : Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Digit(stream: _hourLController.stream),
+                  Padding(padding: EdgeInsets.all(7.5)),
+                  Digit(stream: _hourRController.stream),
+                  Padding(padding: EdgeInsets.all(5.0)),
+                  Colon(),
+                  Padding(padding: EdgeInsets.all(5.0)),
+                  Digit(stream: _minLController.stream),
+                  Padding(padding: EdgeInsets.all(7.5)),
+                  Digit(stream: _minRController.stream),
+                  Padding(padding: EdgeInsets.all(5.0)),
+                  Colon(),
+                  Padding(padding: EdgeInsets.all(5.0)),
+                  Digit(stream: _secLController.stream),
+                  Padding(padding: EdgeInsets.all(7.5)),
+                  Digit(stream: _secRController.stream)
+                ]),
+            InfoPanel(
+                temperature: widget.model.temperatureString,
+                weather: widget.model.weatherString,
+                location: widget.model.location)
+          ],
+        ));
   }
 }

@@ -1,27 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:digital_clock/bar.dart';
 
-class Colon extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Block(
-          width: 10,
-          height: 10,
-          isOn: true,
-        ),
-        Padding(padding: EdgeInsets.all(10)),
-        Block(
-          width: 10,
-          height: 10,
-          isOn: true,
-        )
-      ],
-    );
-  }
-}
-
+/// [Digit] widget utilizes seven [Bar] widgets to make a digit from 0 to 9.
 class Digit extends StatelessWidget {
   final stream;
   final digitConfig = const {
@@ -105,104 +85,5 @@ class Digit extends StatelessWidget {
                       Bar(isRow: true),
                     ]);
         });
-  }
-}
-
-class Bar extends StatefulWidget {
-  final isRow;
-  final isOn;
-
-  const Bar({Key key, this.isRow = false, this.isOn = false}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _BarState();
-}
-
-class _BarState extends State<Bar> with SingleTickerProviderStateMixin {
-  final double minSize = 2.0;
-  final double maxSize = 29.0;
-  final double reduceFactor = 0.0;
-
-  AnimationController sizeController;
-
-  double width = 0.0;
-  double height = 0.0;
-  bool wasOn;
-
-  @override
-  Widget build(BuildContext context) {
-    if (this.widget.isOn != this.wasOn) {
-      this.wasOn = this.widget.isOn;
-    }
-
-    if (this.widget.isRow) {
-      this.width = this.widget.isOn ? maxSize : maxSize * reduceFactor;
-      this.height = minSize;
-    } else {
-      this.width = minSize;
-      this.height = this.widget.isOn ? maxSize : maxSize * reduceFactor;
-    }
-
-    return Container(
-      width: this.widget.isRow ? maxSize * 2 : 2.0,
-      height: this.widget.isRow ? 2.0 : maxSize * 2,
-      child: this.widget.isRow
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Block(
-                    width: this.width,
-                    height: this.height,
-                    isOn: this.widget.isOn),
-                Block(
-                    width: this.width,
-                    height: this.height,
-                    isOn: this.widget.isOn),
-              ],
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Block(
-                    width: this.width,
-                    height: this.height,
-                    isOn: this.widget.isOn),
-                Block(
-                    width: this.width,
-                    height: this.height,
-                    isOn: this.widget.isOn),
-              ],
-            ),
-    );
-  }
-}
-
-class Block extends StatelessWidget {
-  final double width;
-  final double height;
-  final bool isOn;
-
-  const Block({Key key, this.width, this.height, this.isOn}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-        duration: Duration(milliseconds: 500),
-        width: this.width,
-        height: this.height,
-        decoration: BoxDecoration(
-            color: Colors.white.withAlpha(this.isOn ? 255 : 50),
-            shape: BoxShape.rectangle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white
-                    .withAlpha(this.isOn ? 255 : 0)
-                    .withRed(57).withGreen(255).withBlue(20),
-                blurRadius: 2.0,
-                spreadRadius: 2.0,
-              ),
-            ]));
   }
 }
